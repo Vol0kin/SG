@@ -50,8 +50,14 @@ class MyCone extends THREE.Object3D {
   }
 
   changeGeometry() {
-    var newGeometry = new THREE.ConeGeometry(this.guiControls.radius, this.guiControls.height, this.guiControls.resolution);
-
+    // Crear la nueva geometria y asignarla
+    var newGeometry = new THREE.ConeGeometry(1, 1, this.guiControls.resolution);
     this.mesh.geometry = newGeometry;
+
+    // Subir el objeto para que la base este en los ejes y escalar
+    this.position.y += this.guiControls.height / 2;
+
+    // Escalar objeto
+    this.scale.set(this.guiControls.radius, this.guiControls.height, this.guiControls.radius);
   }
 }
