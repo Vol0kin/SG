@@ -8,15 +8,15 @@ class MyBox extends THREE.Object3D {
     this.createGUI(gui,titleGui);
     
     // Un Mesh se compone de geometría y material
-    var boxGeom = new THREE.BoxGeometry (1,1,1);
+    var geometry = new THREE.BoxGeometry (1,1,1);
 
     // Crear material que asigna color segun el vector normal
-    var boxMat = new THREE.MeshNormalMaterial();
-    boxMat.flatShading = true;
-    boxMat.needsUpdate = true;
+    var material = new THREE.MeshNormalMaterial();
+    material.flatShading = true;
+    material.needsUpdate = true;
     
     // Ya podemos construir el Mesh
-    var box = new THREE.Mesh (boxGeom, boxMat);
+    var box = new THREE.Mesh (geometry, material);
     // Y añadirlo como hijo del Object3D (el this)
     this.add (box);
     
@@ -24,6 +24,9 @@ class MyBox extends THREE.Object3D {
     // Como queremos que el sistema de referencia esté en la base,
     // subimos el Mesh de la caja la mitad de su altura
     box.position.y = 0.5;
+
+    // Establecer rotacion en el eje Y
+    this.rotY = 0.0;
   }
   
   createGUI (gui,titleGui) {
@@ -32,6 +35,12 @@ class MyBox extends THREE.Object3D {
       this.sizeX = 1.0;
       this.sizeY = 1.0;
       this.sizeZ = 1.0;
+
+      this.reset = function () {
+        this.sizeX = 1.0;
+        this.sizeY = 1.0;
+        this.sizeZ = 1.0;
+      }
     } 
     
     // Se crea una sección para los controles de la caja
@@ -42,6 +51,8 @@ class MyBox extends THREE.Object3D {
     folder.add (this.guiControls, 'sizeX', 0.1, 5.0, 0.1).name ('Dimensión X : ').listen();
     folder.add (this.guiControls, 'sizeY', 0.1, 5.0, 0.1).name ('Dimensión Y : ').listen();
     folder.add (this.guiControls, 'sizeZ', 0.1, 5.0, 0.1).name ('Dimensión Z : ').listen();
+
+    folder.add(this.guiControls, 'reset').name('[Reset]');
   }
   
   update () {
@@ -51,8 +62,13 @@ class MyBox extends THREE.Object3D {
     // Después, la rotación en Y
     // Luego, la rotación en X
     // Y por último la traslación
+
+    // Actualizar la rotacion en el eje Y
+    this.rotY += 0.01;
+
+    // Actualizar posicion, rotacion y escala
     this.position.set (0,0,0);
-    this.rotation.set (0,0,0);
+    this.rotation.set (0,this.rotY,0);
     this.scale.set (this.guiControls.sizeX,this.guiControls.sizeY,this.guiControls.sizeZ);
   }
 }

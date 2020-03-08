@@ -5,15 +5,18 @@ class MyCone extends THREE.Object3D {
 
     this.createGUI(gui, titleGui);
 
-    // Crear la geometria del cono
-    var coneGeo = new THREE.ConeGeometry(1, 1, 3);
+    // Crear la geometria del cono (radio, altura, resolucion)
+    var geometry = new THREE.ConeGeometry(1, 1, 3);
 
     // Crear material que asigna color segun el vector normal
-    var coneMat = new THREE.MeshNormalMaterial();
-    coneMat.flatShading = true;
-    coneMat.needsUpdate = true;
+    var material = new THREE.MeshNormalMaterial();
 
-    this.mesh = new THREE.Mesh(coneGeo, coneMat);
+    // Establecer que se va a usar sombreado plano y que se tiene que actualizar
+    // en cada frame
+    material.flatShading = true;
+    material.needsUpdate = true;
+
+    this.mesh = new THREE.Mesh(geometry, material);
     this.add(this.mesh);
 
     // Poner la base del cono sobre el suelo
@@ -21,20 +24,28 @@ class MyCone extends THREE.Object3D {
   }
 
   createGUI(gui,titleGui) {
+    var that = this;
     // Controles para el radio, la altura y la resolucion
     this.guiControls = new function() {
       this.radius = 1.0;
       this.height = 1.0;
       this.resolution = 3;
-    }
 
-    var that = this;
+      this.reset = function() {
+        this.radius = 1.0;
+        this.height = 1.0;
+        this.resolution = 3;
+
+        that.changeGeometry();
+      }
+    }
 
     var folder = gui.addFolder(titleGui);
 
     folder.add(this.guiControls, 'radius', 0.1, 5.0, 0.1).name("Radio: ").listen();
     folder.add(this.guiControls, 'height', 0.1, 5.0, 0.1).name("Altura: ").listen();
-    folder.add(this.guiControls, 'resolution', 3, 30, 1).name("Resolución: ").onChange(function(value) {that.changeGeometry()});
+    folder.add(this.guiControls, 'resolution', 3, 30, 1).name("Resolución: ").onChange(function(value) {that.changeGeometry();}).listen();
+    folder.add(this.guiControls, 'reset').name('[Reset]');
   }
 
   update () {
@@ -44,6 +55,10 @@ class MyCone extends THREE.Object3D {
     // Después, la rotación en Y
     // Luego, la rotación en X
     // Y por último la traslación
+    // Incrementar la rotacion en Y
+    this.mesh.rotation.y += 0.01;
+
+    // Actualizar posicion, rotacion y escala
     this.position.set(0,0,0);
     this.rotation.set(0,0,0);
     this.scale.set(this.guiControls.radius, this.guiControls.height, this.guiControls.radius);
@@ -56,8 +71,5 @@ class MyCone extends THREE.Object3D {
 
     // Subir el objeto para que la base este en los ejes y escalar
     this.position.y += this.guiControls.height / 2;
-
-    // Escalar objeto
-    this.scale.set(this.guiControls.radius, this.guiControls.height, this.guiControls.radius);
   }
 }

@@ -39,7 +39,7 @@ class MyScene extends THREE.Scene {
     this.add(this.cubeAxis);
     this.cubeAxis.add(this.cube);
 
-    this.cubeAxis.position.x += 5;
+    this.cubeAxis.position.x += 7;
 
 
     this.cone = new MyCone(this.gui, "Controles del Cono");
@@ -48,7 +48,45 @@ class MyScene extends THREE.Scene {
     this.add(this.coneAxis);
     this.coneAxis.add(this.cone);
 
-    this.coneAxis.position.x -= 5;
+    this.coneAxis.position.x -= 7;
+    
+    // Cilindro
+    this.cylinder = new MyCylinder(this.gui, "Controles del Cilindro");
+    this.cylinderAxis = new THREE.AxesHelper(5);
+
+    this.add(this.cylinderAxis);
+    this.cylinderAxis.add(this.cylinder);
+
+    this.cylinderAxis.position.set(5, 0, -10);
+    //this.cylinderAxis.position.z -= 5;
+
+    // Esfera
+    this.sphere = new MySphere(this.gui, "Controles de la Esfera");
+    this.sphereAxis = new THREE.AxesHelper(5);
+
+    this.add(this.sphereAxis);
+    this.sphereAxis.add(this.sphere);
+
+    this.sphereAxis.position.set(-5, 0, -10);
+
+    // Toro
+    this.torus = new MyTorus(this.gui, "Controles del Toro");
+    this.torusAxis = new THREE.AxesHelper(5);
+
+    this.add(this.torusAxis);
+    this.torusAxis.add(this.torus);
+
+    this.torusAxis.position.set(5, 0, 10);
+
+    // Icosaedro
+    this.icosahedron = new MyIcosahedron(this.gui, "Controles del Icosaedro");
+    this.icosahedronAxis = new THREE.AxesHelper(5);
+
+    this.add(this.icosahedronAxis);
+    this.icosahedronAxis.add(this.icosahedron);
+
+    this.icosahedronAxis.position.set(-5, 0, 10);
+
   }
   
   createCamera () {
@@ -199,6 +237,10 @@ class MyScene extends THREE.Scene {
     // Se actualiza el resto del modelo
     this.cube.update();
     this.cone.update();
+    this.cylinder.update();
+    this.sphere.update();
+    this.torus.update();
+    this.icosahedron.update();
     
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
