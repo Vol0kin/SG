@@ -22,9 +22,6 @@ class CarModel extends THREE.Object3D {
         // Cargar material + modelo
         // Archivo, callback una vez cargado, callback mientras se carga y callback de error
         mtlLoader.load('911.mtl', function(materials) {
-            // Precargar los materiales
-            materials.preload();
-
             // Crear loader del objeto
             var objLoader = new THREE.OBJLoader();
 
@@ -37,12 +34,6 @@ class CarModel extends THREE.Object3D {
             objLoader.load('Porsche_911_GT2.obj', function(object) {
                 // Insertar modelo en la escena
                 that.add(object);
-            },
-            function(xhr) {
-                console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-            },
-            function(error) {
-                console.log('Error while loading the model');
             });
         });        
     }
