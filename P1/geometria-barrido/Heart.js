@@ -22,7 +22,7 @@ class Heart extends THREE.Object3D {
         heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
 
         // Opciones del extrude
-        var extrudeSettings = { amount: 8, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 };
+        var extrudeSettings = { amount: 8, bevelEnabled: true, bevelSegments: 2, bevelSize: 1, bevelThickness: 1 };
 
         var geometry = new THREE.ExtrudeBufferGeometry( heartShape, extrudeSettings );
 
