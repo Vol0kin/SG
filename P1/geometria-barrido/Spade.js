@@ -1,5 +1,5 @@
 
-class Heart extends THREE.Object3D {
+class Spade extends THREE.Object3D {
     constructor() {
         // Llamar al constructor de la superclase
         super();
@@ -21,13 +21,29 @@ class Heart extends THREE.Object3D {
         var geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
         var material = this.createMaterial();
 
-        var mesh = new THREE.Mesh(geometry, material);
+        // Crear corazon y ajustarlo
+        var heart = new THREE.Mesh(geometry, material);
 
-        // Centrar mesh
-        mesh.rotation.z += Math.PI;
-        mesh.scale.set(0.5, 0.5, 0.5);
-        mesh.position.set(5/2, 19/4, -1);
+        // Centrar corazon
+        heart.scale.set(0.5, 0.5, 0.5);
+        heart.position.set(-5/2, -19/4, -1);
+
+        // Crear nodo para escalar y subir el corazon
+        var heartTranslateScale = new THREE.Object3D();
+        heartTranslateScale.add(heart);
+        heartTranslateScale.scale.set(0.6, 0.6, 1);
+        heartTranslateScale.position.y += 4.5;
         
+        // Crear base
+        var base = new Base();
+        base.scale.set(0.5, 0.5, 0.5);
+
+        // Crear mesh
+        var mesh = new THREE.Object3D();
+
+        mesh.add(heartTranslateScale);
+        mesh.add(base);        
+
         /**
          * 1. Nodo rotacion beta en Y
          * 2. Nodo rotacion -alfa Z + traslacion X
@@ -41,11 +57,12 @@ class Heart extends THREE.Object3D {
         this.nodeRotateTranslate.add(this.nodeRotateY);
         this.nodeRotateZ.add(this.nodeRotateTranslate);
         this.add(this.nodeRotateZ);
+        
     }
 
     createMaterial() {
         // Crear material de un color
-        var material = new THREE.MeshPhongMaterial({color: 0xff0000});
+        var material = new THREE.MeshPhongMaterial({color: 0x0000ff});
 
         return material;
     }
@@ -75,7 +92,7 @@ class Heart extends THREE.Object3D {
         this.nodeRotateY.rotation.y += 0.01;
 
         this.nodeRotateTranslate.rotation.z -= 0.01;
-        this.nodeRotateTranslate.position.x = 15;
+        this.nodeRotateTranslate.position.y = -15;
         
         this.nodeRotateZ.rotation.z += 0.01;
     }

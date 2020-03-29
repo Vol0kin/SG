@@ -35,7 +35,7 @@ class Base extends THREE.Object3D {
 
     createMeshPhongMaterial() {
         // Crear material de un color
-        var material = new THREE.MeshPhongMaterial({color: 0xff0000});
+        var material = new THREE.MeshPhongMaterial({color: 0x0000ff});
 
         return material;
     }

@@ -1,10 +1,10 @@
 
-class Heart extends THREE.Object3D {
+class Diamond extends THREE.Object3D {
     constructor() {
         // Llamar al constructor de la superclase
         super();
 
-        // Crear la forma del corazon
+        // Crear forma
         var shape = this.createShape();
 
         /**
@@ -15,19 +15,22 @@ class Heart extends THREE.Object3D {
          * - bevelSize: tamanio del bisel
          * - bevelThickness: grosor del bisel
          */
-        var extrudeSettings = {amount: 4, bevelEnabled: true, bevelSegments: 2, bevelSize: 1, bevelThickness: 1};
+        var extrudeSettings = {amount: 4, bevelEnabled: true, bevelSegments: 3, bevelSize: 1, bevelThickness: 1};
 
         // Crear geometria, material y mesh
         var geometry = new THREE.ExtrudeBufferGeometry(shape, extrudeSettings);
         var material = this.createMaterial();
 
+        // Crear mesh
         var mesh = new THREE.Mesh(geometry, material);
 
-        // Centrar mesh
-        mesh.rotation.z += Math.PI;
+        // Ajustar mesh
+        mesh.position.z -= 1;
         mesh.scale.set(0.5, 0.5, 0.5);
-        mesh.position.set(5/2, 19/4, -1);
-        
+
+        // Insertar objeto en la escena
+        this.add(mesh);
+
         /**
          * 1. Nodo rotacion beta en Y
          * 2. Nodo rotacion -alfa Z + traslacion X
@@ -43,6 +46,24 @@ class Heart extends THREE.Object3D {
         this.add(this.nodeRotateZ);
     }
 
+    createShape() {
+        var shape = new THREE.Shape();
+
+        // Establecer inicio
+        var x = 0, y = 0;
+        
+        // Moverse sin dibujar
+        shape.moveTo(x, y - 10);
+
+        // Crear lineas que forman el rombo
+        shape.lineTo(x + 5, y);
+        shape.lineTo(x, y + 10);
+        shape.lineTo(x - 5, y);
+        shape.lineTo(x, y - 10);
+
+        return shape;
+    }
+
     createMaterial() {
         // Crear material de un color
         var material = new THREE.MeshPhongMaterial({color: 0xff0000});
@@ -50,32 +71,11 @@ class Heart extends THREE.Object3D {
         return material;
     }
 
-    createShape() {
-        var shape = new THREE.Shape();
-
-        // Establecer puntos iniciales
-        var x = 0, y = 0;
-
-        // Moverse sin dibujar
-        shape.moveTo( x + 5, y + 5 );
-
-        // Dibujar curvas
-        shape.moveTo( x + 5, y + 5 );
-        shape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
-        shape.bezierCurveTo( x - 6, y, x - 6, y + 7,x - 6, y + 7 );
-        shape.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19 );
-        shape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
-        shape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
-        shape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
-
-        return shape;
-    }
-
     update() {
         this.nodeRotateY.rotation.y += 0.01;
 
         this.nodeRotateTranslate.rotation.z -= 0.01;
-        this.nodeRotateTranslate.position.x = 15;
+        this.nodeRotateTranslate.position.x = -15;
         
         this.nodeRotateZ.rotation.z += 0.01;
     }
