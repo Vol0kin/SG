@@ -23,10 +23,8 @@ class HeartColumn extends THREE.Object3D {
         mesh.scale.set(0.2, 0.2, 0.2);
         mesh.position.set(2, -12, 3.3);
 
-         /**
-         * 1. Nodo rotacion beta en Y
-         * 2. Nodo rotacion alfa X + traslacion X
-         * 3. Nodo rotacion alfa Z
+        /**
+         * 1. Nodo rotacion alfa X + rotacion alfa Y + traslacion X
          */
         this.nodeRotateTranslate = new THREE.Object3D();
 

@@ -13,34 +13,18 @@ class ClubsColumn extends THREE.Object3D {
         // Crear camino
         var path = new THREE.CatmullRomCurve3(curvePoints);
         var options = { steps : 50 , curveSegments : 10 , extrudePath : path };
-        var geometry = new THREE.ExtrudeGeometry(heartShape, options);
 
+        // Crear geometria y material
+        var geometry = new THREE.ExtrudeGeometry(heartShape, options);
         var material = this.createMeshPhongMaterial();
 
 
-        // Create the final object to add to the scene
-        var circle1 = new THREE.Mesh(geometry, material);
-        var circle2 = new THREE.Mesh(geometry, material);
-        var circle3 = new THREE.Mesh(geometry, material);
-        circle2.position.x += 1.5;
-
-        circle3.position.x += 0.75;
-        circle3.position.z += 1;
-
-        // Crear el nodo mesh
-        var mesh = new THREE.Object3D();
-
-        // Insertar circulo
-        mesh.add(circle1);
-        mesh.add(circle2);
-        mesh.add(circle3);
-        
+        // Crear y posicionar mesh
+        var mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(0, -5, -0.75);
 
         /**
-         * 1. Nodo rotacion beta en Y
-         * 2. Nodo rotacion alfa X + traslacion X
-         * 3. Nodo rotacion alfa Z
+         * 1. Nodo rotacion alfa X + rotacion alfa Y + traslacion X
          */
         this.nodeRotateTranslate = new THREE.Object3D();
 
@@ -52,13 +36,22 @@ class ClubsColumn extends THREE.Object3D {
     createShape() {
         var shape = new THREE.Shape();
 
+        /*
         var c = 0.551915024494
+        
+        shape.moveTo(-1, 0);
 
-        shape.moveTo(0, 1);
         shape.bezierCurveTo(c, 1, 1, c, 1, 0); // Primer cuadrante
         shape.bezierCurveTo(1, -c, c, -1, 0, -1); // Cuarto cuadrante
         shape.bezierCurveTo(-c, -1, -1, -c, -1, 0); // Tercer cuadrante
         shape.bezierCurveTo(-1, c, -c, 1, 0, 1); // Segundo cuadrante
+        */
+
+        // Crear arco
+        // x centro, y centro, radio, radian inicio, radian final, sentido horario (bool)
+        shape.absarc(-1, 0, 1, 0, Math.PI / 3, true);
+        shape.absarc(0, 1.6, 1, -2 * Math.PI/3, -Math.PI / 3, true);
+        shape.absarc(1, 0, 1, 2* Math.PI / 3, Math.PI, true);
 
         return shape;
     }
