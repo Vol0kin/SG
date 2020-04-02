@@ -10,7 +10,7 @@ class Cup extends THREE.Object3D {
         // Crear geometrias
         var cylinder1 = new THREE.CylinderGeometry(7, 7, 15, 40);
         var cylinder2 = new THREE.CylinderGeometry(6.5, 6.5, 14.5, 40);
-        var torus = new THREE.TorusGeometry(5, 1.5, 16, 100);
+        var torus = new THREE.TorusGeometry(5, 1, 16, 100);
 
         // Colocar correctamente las geometrías
         cylinder2.translate(0, 0.25, 0);
@@ -24,15 +24,11 @@ class Cup extends THREE.Object3D {
         var result = partial.subtract(cylinder2BSP); // Restar al resultado el cilindro interior
 
         // Obtener mesh y normales (primero de caras y luego de vertices)
-        var mesh = result.toMesh(material);
-        mesh.geometry.computeFaceNormals();
-        mesh.geometry.computeVertexNormals();
+        this.mesh = result.toMesh(material);
+        this.mesh.geometry.computeFaceNormals();
+        this.mesh.geometry.computeVertexNormals();
 
-        // Crear nodo de transformaciones
-        this.translateRotate = new THREE.Object3D();
-
-        this.translateRotate.add(mesh);
-        this.add(this.translateRotate);
+        this.add(this.mesh);
     }
 
     createMaterial() {
@@ -49,8 +45,8 @@ class Cup extends THREE.Object3D {
     update() {
         var rotationInc = 0.01;
 
-        this.translateRotate.rotation.y += rotationInc;
-        this.translateRotate.rotation.x += rotationInc;
-        this.translateRotate.position.set(-20, 7.5, 0);
+        this.mesh.rotation.y += rotationInc;
+        this.mesh.rotation.x += rotationInc;
+        this.mesh.position.set(-20, 0, 0);
     }
 }
