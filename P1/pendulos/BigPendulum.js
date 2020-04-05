@@ -17,24 +17,24 @@ class BigPendulum extends THREE.Object3D {
         var depth = 1;
 
         var boxGeometry = new THREE.BoxGeometry(width, this.greenBoxHeight, depth);
-        var greenBoxUp = new THREE.Mesh(boxGeometry, greenMaterial);
+        var greenSegmentUp = new THREE.Mesh(boxGeometry, greenMaterial);
 
         // Crear cubo rojo y hacer que la parte superior este pegada
         // al eje Y
-        this.redBoxHeight = 5;
-        this.redBoxScaleY = 1;
+        this.redSegmentHeight = 5;
+        this.redSegmentScaleY = 1;
 
-        var redBoxGeometry = new THREE.BoxGeometry(width, this.redBoxHeight, depth);
-        var redBox = new THREE.Mesh(redBoxGeometry, redMaterial);
+        var redSegmentGeometry = new THREE.BoxGeometry(width, this.redSegmentHeight, depth);
+        var redSegment = new THREE.Mesh(redSegmentGeometry, redMaterial);
 
-        redBox.position.y -= this.redBoxHeight / 2;
+        redSegment.position.y -= this.redSegmentHeight / 2;
 
         // Insertar cubo rojo en un nodo
-        this.redBoxNode = new THREE.Object3D();
-        this.redBoxNode.add(redBox);
+        this.redSegmentNode = new THREE.Object3D();
+        this.redSegmentNode.add(redSegment);
 
         // Crear cubo verde de abajo
-        this.greenBoxDown = greenBoxUp.clone();
+        this.greenSegmentDown = greenSegmentUp.clone();
 
         // Crear engranaje
         var gearDepth = 0.5;
@@ -45,18 +45,19 @@ class BigPendulum extends THREE.Object3D {
         gear.position.z += depth / 2 + gearDepth / 2;
 
         // Insertar nodos/mallas en la escena
-        this.add(greenBoxUp);
-        this.add(this.redBoxNode);
-        this.add(this.greenBoxDown);
+        this.add(greenSegmentUp);
+        this.add(this.redSegmentNode);
+        this.add(this.greenSegmentDown);
         this.add(gear);
     }
 
     update() {
-        // Actualizar cubo rojo
-        this.redBoxNode.scale.set(1, this.redBoxScaleY, 1);
-        this.redBoxNode.position.y = -this.greenBoxHeight / 2;
+        // Actualizar escala del segmento rojo, su posicion y actualizar su altura
+        this.redSegmentNode.scale.set(1, this.redSegmentScaleY, 1);
+        this.redSegmentNode.position.y = -this.greenBoxHeight / 2;
+        this.redSegmentHeight = 5 * this.redSegmentScaleY;
 
-        // Actualizar cubo verde
-        this.greenBoxDown.position.y = -this.greenBoxHeight - this.redBoxHeight * this.redBoxScaleY;
+        // Actualizar posicion del segmento verde inferior
+        this.greenSegmentDown.position.y = -this.greenBoxHeight - this.redSegmentHeight;
     }
 }
