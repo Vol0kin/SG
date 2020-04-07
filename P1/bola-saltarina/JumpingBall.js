@@ -1,7 +1,7 @@
 /**
  * Clase que representa una bola saltarina
  */
-class RotatingBall extends THREE.Object3D {
+class JumpingBall extends THREE.Object3D {
     constructor(gui, titleGui) {
         // Llamar al constructor de la superclase
         super();
@@ -21,7 +21,7 @@ class RotatingBall extends THREE.Object3D {
         // Establecer altura minima y maxima y si subir o bajar
         this.MIN_HEIGHT = 1;
         this.MAX_HEIGHT = 26;
-        this.heightSpeed = 0.01;
+        this.heightSpeed = 1;
         this.increaseHeight = true;
 
         // Crear material transparente
@@ -82,14 +82,54 @@ class RotatingBall extends THREE.Object3D {
         // Actualizar rotacion en Y de la bola
         this.ballNode.rotation.y += this.speed * elapsedTime;
 
+        // Actualizar altura de la bola
+        var accelerationDistance = 4;
+
         if (this.increaseHeight) {
-            this.ballNode.position.y += this.heightSpeed;
+            // Aceleracion, deceleracion y velocidad constante
+            if (this.ballNode.position.y <= this.MIN_HEIGHT + accelerationDistance) {
+                var lambda = (this.ballNode.position.y - this.MIN_HEIGHT) / accelerationDistance;
+                var f = lambda * lambda;
+                
+                var v0 = this.heightSpeed / 4;
+
+                this.ballNode.position.y += v0 + f * (this.heightSpeed - v0);
+            } else if (this.ballNode.position.y >= this.MAX_HEIGHT - accelerationDistance) {
+                var lambda = (this.ballNode.position.y - (this.MAX_HEIGHT - accelerationDistance)) / accelerationDistance;
+                var f = -lambda * lambda + 2 * lambda;
+
+                var v1 = this.heightSpeed / 4;
+
+                this.ballNode.position.y += this.heightSpeed + f * (v1 - this.heightSpeed);
+            } else if (this.ballNode.position.y >= this.MIN_HEIGHT + accelerationDistance
+                        && this.ballNode.position.y <= this.MAX_HEIGHT - accelerationDistance) {
+                this.ballNode.position.y += this.heightSpeed;
+            }
 
             if (this.ballNode.position.y >= this.MAX_HEIGHT) {
                 this.increaseHeight = false;
             }
+            
         } else {
-            this.ballNode.position.y -= this.heightSpeed;
+            // Aceleracion, deceleracion y velocidad constante
+            if (this.ballNode.position.y >= this.MAX_HEIGHT - accelerationDistance) {
+                var lambda = (this.ballNode.position.y - (this.MAX_HEIGHT - accelerationDistance)) / accelerationDistance;
+                var f = lambda * lambda;
+
+                var v0 = this.heightSpeed / 4;
+
+                this.ballNode.position.y -= v0 + f * (this.heightSpeed - v0);
+            } else if (this.ballNode.position.y <= this.MIN_HEIGHT + accelerationDistance) {
+                var lambda = (this.ballNode.position.y - this.MIN_HEIGHT + accelerationDistance) / accelerationDistance;
+                var f = -lambda * lambda + 2 * lambda;
+
+                var v1 = this.heightSpeed / 4;
+
+                this.ballNode.position.y -= this.heightSpeed + f * (v1 - this.heightSpeed);
+            } else if (this.ballNode.position.y >= this.MIN_HEIGHT + accelerationDistance
+                        && this.ballNode.position.y <= this.MAX_HEIGHT - accelerationDistance) {
+                this.ballNode.position.y -= this.heightSpeed;
+            }
 
             if (this.ballNode.position.y <= this.MIN_HEIGHT) {
                 this.increaseHeight = true;
