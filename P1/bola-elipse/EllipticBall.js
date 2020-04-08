@@ -75,9 +75,11 @@ class EllipticBall extends THREE.Object3D {
         // Crear folder que contiene los controles
         var folder = gui.addFolder(titleGui);
 
+        
         // Insertar controles
         folder.add(this.guiControls, 'bigRadiusLength', 0, 25, 0.1).name('Extensión: ').onChange(() => {
             this.ellipticPath = this.createEllipticPath();
+            
             /*
             var points = this.ellipticPath.getPoints( 100 );
             var geometryLine =  new THREE.BufferGeometry().setFromPoints( points );
@@ -87,12 +89,31 @@ class EllipticBall extends THREE.Object3D {
     }
 
     createEllipticPath() {
-        var ellipticPath = new THREE.CatmullRomCurve3( [
-            new THREE.Vector3( -5 - this.guiControls.bigRadiusLength, 0, 0 ),
-            new THREE.Vector3( 0, 0, 5 ),
-            new THREE.Vector3( 5 + this.guiControls.bigRadiusLength, 0, 0 ),
-            new THREE.Vector3( 0, 0, -5 )
-        ], true );
+        function ellipsePoint(a, b, z) {
+            return Math.sqrt(a * a * (1 - (z * z) / (b * b)));
+        }
+
+        // Lista con los puntos de la elipse y con puntos simetricos
+        var points = [];
+        var symmetricPoints = [];    
+        
+        // Crear mitad de la elipse
+        for (let z = 5; z >= -5; z -= 0.5) {
+            points.push(new THREE.Vector3(ellipsePoint(5 + this.guiControls.bigRadiusLength, 5, z), 0, z));
+        }
+
+        // Crear otra mitad simetricamente a excepcion de los puntos primero y ultimo
+        for (let i = points.length - 2; i > 0; i--) {
+            symmetricPoints.push(new THREE.Vector3(-points[i].x, 0, points[i].z));
+        }
+
+        // Copiar puntos simetricos
+        symmetricPoints.forEach(function (vector3d) {
+            points.push(vector3d);
+        });
+
+        // Crear curva cerrada
+        var ellipticPath = new THREE.CatmullRomCurve3(points, true);
 
         return ellipticPath;
     }
@@ -100,6 +121,18 @@ class EllipticBall extends THREE.Object3D {
     update() {
         // Actualizar radios del cilindro
         this.cylinderMesh.scale.set(1 + this.guiControls.bigRadiusLength / 5, 1, 1);
+
+        /*
+        var time = Date.now();
+        var loopTime = 4000;
+        var t = (time % loopTime) / loopTime;
+
+        // Obtener nueva posicion
+        var position = this.ellipticPath.getPointAt(t);
+
+        // Copiar la posicion, actualizando la del objeto
+        this.ballNode.position.copy(position);
+        */
 
         // Actualizar TWEEN
         TWEEN.update();
