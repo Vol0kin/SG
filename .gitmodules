@@ -1,0 +1,3 @@
+[submodule "P2"]
+	path = P2
+	url = git@github.com:Vol0kin/PacMan3D.git
